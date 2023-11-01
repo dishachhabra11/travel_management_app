@@ -8,6 +8,7 @@ import { GoogleApiWrapper } from "google-map-react";
 
 function App() {
   const [places, setPlaces] = useState([]);
+  const [filteredPlaces,setFilteredPlaces]=useState([]);
   const [childClicked,setChildClicked]=useState(null);
 
   const [coordinates, setCoordinates] = useState({});
@@ -23,20 +24,27 @@ function App() {
     );
   }, []);
 
+  useEffect(()=>{
+const filteredPlaces=places.filter((place)=>place.rating >rating )
+setFilteredPlaces(filteredPlaces);
+}
+,[rating])
+
   useEffect(() => {
     setIsLoading(true);
     getPlaceData(type,bounds.sw, bounds.ne).then((data) => {
       setPlaces(data);
+      setFilteredPlaces([]);
       setIsLoading(false);
     });
   }, [type,coordinates, bounds]);
   return (
     <>
       <CssBaseline />
-      <Header />
+      <Header setCoordinates={setCoordinates}/>
       <Grid container spacing={3} style={{ width: "100%" }}>
         <Grid item xs={12} md={4}>
-          <List places={places} 
+          <List places={filteredPlaces.length ? filteredPlaces :places} 
           childClicked={childClicked}
           isLoading={isLoading}
           type={type}
@@ -51,7 +59,7 @@ function App() {
             setCoordinates={setCoordinates}
             setBounds={setBounds}
             coordinates={coordinates}
-            places={places}
+            places={filteredPlaces.length ? filteredPlaces :places}
             setChildClicked={setChildClicked}
           />
         </Grid>
