@@ -1,23 +1,26 @@
 import axios from "axios";
 
-const url = "https://travel-advisor.p.rapidapi.com/hotels/list-in-boundary";
-
-export async function getPlaceData(sw = {}, ne = {}) {
+export async function getPlaceData(type, sw = {}, ne = {}) {
   try {
     const {
       data: { data },
-    } = await axios.get(url, {
-      params: {
-        bl_latitude: sw.lat,
-        bl_longitude: sw.lng,
-        tr_longitude: ne.lng,
-        tr_latitude: ne.lat,
-      },
-      headers: {
-        "X-RapidAPI-Key": "a764508a4emsh53249364544326bp1a4a18jsn4d2b38bdb8f6",
-        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
-      },
-    });
+    } = await axios.get(
+      `https://travel-advisor.p.rapidapi.com/${type}/list-in-boundary`,
+      {
+        method: "GET",
+        params: {
+          bl_latitude: sw.lat,
+          bl_longitude: sw.lng,
+          tr_longitude: ne.lng,
+          tr_latitude: ne.lat,
+        },
+        headers: {
+          "X-RapidAPI-Key":
+            "85648c96c6msh8e39efbf6822eb2p18b016jsn95811344567a",
+          "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
+        },
+      }
+    );
     return data;
   } catch (error) {
     console.log(error);
